@@ -1,0 +1,13 @@
+{
+  "name": "vmix-control-panel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VMIX Control Panel - Replace Google Sheets workflow",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

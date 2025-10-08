@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VMIX Control Panel</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h1>VMIX Control Panel</h1>
+        </div>
+        <nav class="sidebar-nav">
+          <button class="nav-item active" data-section="welcome">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Welcome</span>
+          </button>
+          <button class="nav-item" data-section="scoreboard">
+            <span class="nav-icon">ℹ️</span>
+            <span class="nav-label">General Info</span>
+          </button>
+          <button class="nav-item" data-section="graphics">
+            <span class="nav-icon">⚽</span>
+            <span class="nav-label">Rocket League</span>
+          </button>
+          <button class="nav-item" data-section="audio">
+            <span class="nav-icon">🎯</span>
+            <span class="nav-label">VALORANT</span>
+          </button>
+          <button class="nav-item" data-section="sponsors">
+            <span class="nav-icon">🏢</span>
+            <span class="nav-label">Sponsors</span>
+          </button>
+          <button class="nav-item" data-section="drawshow">
+            <span class="nav-icon">🎲</span>
+            <span class="nav-label">Draw Show</span>
+          </button>
+          <button class="nav-item" data-section="settings">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">Settings</span>
+          </button>
+          <button class="nav-item" data-section="debug">
+            <span class="nav-icon">🐛</span>
+            <span class="nav-label">Debug Outputs</span>
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <button id="clearAllBtn" class="ghost-btn" style="background: #ff4444; color: white; margin-bottom: 8px;">Clear All</button>
+          <button id="testConsole" class="ghost-btn" style="background: #666; color: white;">Test Console</button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <section class="panel active" data-panel="welcome"></section>
+        <section class="panel" data-panel="scoreboard"></section>
+        <section class="panel" data-panel="graphics"></section>
+        <section class="panel" data-panel="audio"></section>
+        <section class="panel" data-panel="drawshow"></section>
+        <section class="panel" data-panel="settings"></section>
+        <section class="panel" data-panel="debug"></section>
+        <section class="panel" data-panel="sponsors"></section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
