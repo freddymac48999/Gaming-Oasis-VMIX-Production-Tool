@@ -2255,3 +2255,69 @@ button.secondary.active {
     padding: 16px;
   }
 }
+
+/* Save Button Styles */
+.save-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.save-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--text);
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.save-button:hover {
+  background: #2a7ba8;
+  transform: translateY(-1px);
+}
+
+.save-button:active {
+  transform: translateY(0);
+}
+
+.save-button:disabled {
+  background: var(--muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.save-button-icon {
+  font-size: 16px;
+}
+
+.save-status {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  min-height: 16px;
+}
+
+.save-status.success {
+  color: var(--accent-2);
+}
+
+.save-status.error {
+  color: #ff6b6b;
+}
+
+.save-status.unsaved {
+  color: var(--warning);
+}
