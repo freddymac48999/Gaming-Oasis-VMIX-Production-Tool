@@ -44,19 +44,63 @@ app.use((req, res, next) => {
   }
 });
 
-app.post('/api/save', (req, res) => {
+// File write with retry logic to handle EBUSY errors
+function writeFileWithRetry(filePath, data, maxRetries = 3, delay = 100) {
+  return new Promise((resolve, reject) => {
+    let attempts = 0;
+    
+    function attemptWrite() {
+      attempts++;
+      
+      try {
+        // Use writeFile instead of writeFileSync to avoid blocking
+        fs.writeFile(filePath, data, 'utf8', (err) => {
+          if (err) {
+            if (err.code === 'EBUSY' && attempts < maxRetries) {
+              console.log(`[Server] File busy, retrying in ${delay}ms (attempt ${attempts}/${maxRetries})`);
+              setTimeout(attemptWrite, delay);
+              return;
+            }
+            reject(err);
+            return;
+          }
+          resolve();
+        });
+      } catch (syncErr) {
+        if (syncErr.code === 'EBUSY' && attempts < maxRetries) {
+          console.log(`[Server] File busy, retrying in ${delay}ms (attempt ${attempts}/${maxRetries})`);
+          setTimeout(attemptWrite, delay);
+          return;
+        }
+        reject(syncErr);
+      }
+    }
+    
+    attemptWrite();
+  });
+}
+
+app.post('/api/save', async (req, res) => {
   try {
     const { filename, data } = req.body || {};
     if (!filename || typeof data !== 'object') return res.status(400).json({ error: 'Invalid payload' });
     if (!files.includes(filename)) return res.status(400).json({ error: 'Unknown filename' });
+    
     const target = path.join(JSON_DIR, filename);
-    fs.writeFileSync(target, JSON.stringify(data, null, 2), 'utf8');
+    const jsonData = JSON.stringify(data, null, 2);
+    
+    // Use retry logic for file writes
+    await writeFileWithRetry(target, jsonData);
+    
     res.json({ ok: true, file: path.relative(ROOT, target) });
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { 
+    console.error('[Server] Save error:', e);
+    res.status(500).json({ error: e.message }); 
+  }
 });
 
 // Sponsor-specific API endpoints
-app.post('/api/save-sponsors', (req, res) => {
+app.post('/api/save-sponsors', async (req, res) => {
   try {
     const { sponsors } = req.body;
     if (!Array.isArray(sponsors)) {
@@ -65,10 +109,12 @@ app.post('/api/save-sponsors', (req, res) => {
     
     // Save combined sponsors data
     const sponsorsTarget = path.join(JSON_DIR, 'sponsors.json');
-    fs.writeFileSync(sponsorsTarget, JSON.stringify(sponsors, null, 2), 'utf8');
+    const jsonData = JSON.stringify(sponsors, null, 2);
+    await writeFileWithRetry(sponsorsTarget, jsonData);
     
     res.json({ ok: true, file: path.relative(ROOT, sponsorsTarget) });
   } catch (e) {
+    console.error('[Server] Save sponsors error:', e);
     res.status(500).json({ error: e.message });
   }
 });
@@ -90,15 +136,17 @@ app.get('/api/load-sponsors', (req, res) => {
   }
 });
 
-app.post('/api/clear-sponsors', (req, res) => {
+app.post('/api/clear-sponsors', async (req, res) => {
   try {
     // Clear sponsors - create empty array since we only store sponsors with data
     const sponsorsTarget = path.join(JSON_DIR, 'sponsors.json');
     const emptySponsors = [];
-    fs.writeFileSync(sponsorsTarget, JSON.stringify(emptySponsors, null, 2), 'utf8');
+    const jsonData = JSON.stringify(emptySponsors, null, 2);
+    await writeFileWithRetry(sponsorsTarget, jsonData);
     
     res.json({ ok: true, file: path.relative(ROOT, sponsorsTarget) });
   } catch (e) {
+    console.error('[Server] Clear sponsors error:', e);
     res.status(500).json({ error: e.message });
   }
 });
@@ -117,16 +165,18 @@ app.get('/api/rloverlay', (req, res) => {
   }
 });
 
-app.post('/api/rloverlay', (req, res) => {
+app.post('/api/rloverlay', async (req, res) => {
   try {
     const { data } = req.body;
     if (!data || typeof data !== 'object') {
       return res.status(400).json({ error: 'Invalid data structure' });
     }
     const rloverlayPath = path.join(JSON_DIR, 'rloverlay.json');
-    fs.writeFileSync(rloverlayPath, JSON.stringify(data, null, 2), 'utf8');
+    const jsonData = JSON.stringify(data, null, 2);
+    await writeFileWithRetry(rloverlayPath, jsonData);
     res.json({ ok: true, file: 'rloverlay.json' });
   } catch (e) {
+    console.error('[Server] Save rloverlay error:', e);
     res.status(500).json({ error: e.message });
   }
 });
