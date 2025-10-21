@@ -1792,6 +1792,47 @@ button.secondary.active {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
+/* Hex Override Field Styles */
+.override-field .form-description {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.hex-override-input {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.hex-override-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(76, 194, 255, 0.2);
+}
+
+.hex-override-input.hex-invalid {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
+}
+
+.hex-validation-message {
+  font-size: 11px;
+  margin-top: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.hex-validation-message.hex-valid {
+  color: var(--accent-2);
+}
+
+.hex-validation-message.hex-invalid {
+  color: #ff6b6b;
+}
+
 .similarity-calculator {
   font-size: 14px;
   font-weight: 600;
